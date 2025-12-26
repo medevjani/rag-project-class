@@ -10,7 +10,7 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: eu-north-1
   ECR_REPOSITORY: rag-qa-system-hybrid
   APP_RUNNER_SERVICE: rag-qa-app-hybrid
 
@@ -113,7 +113,7 @@ jobs:
                     "LOG_LEVEL": "INFO",
                     "LANGSMITH_TRACING": "true",
                     "LANGSMITH_API_KEY": "${{ secrets.LANGSMITH_API_KEY }}",
-                    "LANGSMITH_PROJECT": "rag-qa-production-system",
+                    "LANGSMITH_PROJECT": "rag-qa-production",
                     "LANGSMITH_ENDPOINT": "https://eu.api.smith.langchain.com"
                   }
                 }
