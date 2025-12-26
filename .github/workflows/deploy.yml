@@ -10,8 +10,7 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 env:
-  AWS_REGION: eu-north-1
-  AWS_APPRUNNER_REGION: us-east-1
+  AWS_REGION: us-east-1
   ECR_REPOSITORY: rag-qa-system-hybrid
   APP_RUNNER_SERVICE: rag-qa-app-hybrid
 
@@ -81,7 +80,7 @@ jobs:
       - name: Check if App Runner service exists
         id: check-service
         run: |
-          SERVICE_ARN=$(aws apprunner list-services --region ${{ env.AWS_APPRUNNER_REGION }} \
+          SERVICE_ARN=$(aws apprunner list-services --region ${{ env.AWS_REGION }} \
             --query "ServiceSummaryList[?ServiceName=='${{ env.APP_RUNNER_SERVICE }}'].ServiceArn" \
             --output text)
 
@@ -100,7 +99,7 @@ jobs:
         run: |
           aws apprunner create-service \
             --service-name ${{ env.APP_RUNNER_SERVICE }} \
-            --region ${{ env.AWS_APPRUNNER_REGION }} \
+            --region ${{ env.AWS_REGION }} \
             --source-configuration '{
               "ImageRepository": {
                 "ImageIdentifier": "${{ needs.build-and-push.outputs.image_uri }}",
@@ -151,7 +150,7 @@ jobs:
         run: |
           aws apprunner update-service \
             --service-arn ${{ steps.check-service.outputs.service_arn }} \
-            --region ${{ env.AWS_APPRUNNER_REGION }} \
+            --region ${{ env.AWS_REGION }} \
             --source-configuration '{
               "ImageRepository": {
                 "ImageIdentifier": "${{ needs.build-and-push.outputs.image_uri }}",
@@ -201,7 +200,7 @@ jobs:
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             STATUS=$(aws apprunner describe-service \
               --service-arn $SERVICE_ARN \
-              --region ${{ env.AWS_APPRUNNER_REGION }} \
+              --region ${{ env.AWS_REGION }} \
               --query 'Service.Status' \
               --output text)
 
